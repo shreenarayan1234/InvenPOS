@@ -1,0 +1,34 @@
+#login{
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(230, 48, 199);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} 
+
+.card {
+  background-image: linear-gradient(45deg, rgba(255, 255, 0, 0.514), rgb(243, 29, 232));
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(46, 40, 40, 0.2);
+  width: 600px;
+}
+
+.card-header {
+  text-align: center;
+  color: #333;
+}
+
+.card-body {
+  padding: 20px;
+}
+button{
+  cursor: pointer;
+}
+.login_error_msg{
+  position: absolute;
+  color: red;
+  text-shadow: 0 0 10px white;
+}
