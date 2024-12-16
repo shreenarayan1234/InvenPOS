@@ -3,8 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Master from "../layout/Master";
 import Dashboard from "../modules/Dashboard";
 import Error500 from "../modules/Error500";
-import Login from "../modules/auth/Login";
-  // Assuming you have a Login component
+import AddCategory from "../modules/category/AddCategory";
 
 const ProjectRouter = createBrowserRouter([
   {
@@ -16,14 +15,18 @@ const ProjectRouter = createBrowserRouter([
         element: <Dashboard />,
       },
       {
+        path: "/category/create",
+        element: <AddCategory />,
+      },
+      {
         path: "/error-500",
         element: <Error500 />,
       },
-      {
-        path: "/login",  // Ensure login page route is correctly mapped
-        element: <Login />,
-      },
     ],
+  },
+  {
+    path: "*",
+    element: <h1>404 - Page Not Found</h1>,
   },
 ]);
 

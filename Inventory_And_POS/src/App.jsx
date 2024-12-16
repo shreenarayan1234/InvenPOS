@@ -3,17 +3,14 @@ import "./assets/css/styles.css";
 import { RouterProvider } from "react-router-dom";
 import ProjectRouter from "./components/router/ProjectRouter";
 import PublicRouter from "./components/router/PublicRouter";
-import axios from 'axios';
-
 
 const App = () => {
   const [auth, setAuth] = useState(false);
 
   useEffect(() => {
-    if (localStorage.token != undefined) {
-      setAuth(true);
-      
-    }
+    const token = localStorage.getItem("token");
+    console.log("Auth Status:", token ? "Authenticated" : "Guest");
+    setAuth(!!token);
   }, []);
 
   return auth ? (

@@ -1,0 +1,12 @@
+.custom-hover:hover {
+    background-color: #6da8e8; /* Darker shade of blue */
+    color: #fff; /* White text */
+    border-color: #004085; /* Darker border */
+    transition: all 0.3s ease-in-out; /* Smooth transition */
+  }
+
+  .login_error_msg{
+    position: absolute;
+    color: red;
+    text-shadow: 0 0 10px white;
+  }
