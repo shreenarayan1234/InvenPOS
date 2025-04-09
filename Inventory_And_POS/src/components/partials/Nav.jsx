@@ -1,6 +1,7 @@
 import React from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
+//Axios is a JavaScript library used to make HTTP requests (like GET, POST) from the browser or Node.js.
 import Constants from "../../Constants";
 import GlobalFunction from "../../GlobalFunction";
 
