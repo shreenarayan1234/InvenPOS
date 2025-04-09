@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Swal from "sweetalert2";
 import BreadCrumb from "../BreadCrumb";
 import { Link } from "react-router-dom";
 import style from "./AddCategory.module.css";
@@ -37,24 +38,97 @@ const AddCategory = () => {
     reader.readAsDataURL(file);
   };
 
+  
   const handleCategoryCreate = () => {
     setIsLoading(true);
-    axios
-      .post(`${Constants.BASE_URL}/category`, input, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is included
-        },
-      })
-      .then((res) => {
-        setIsLoading(false);
-        console.log(res.data);
-      })
-      .catch((errors) => {
-        setIsLoading(false);
-        if (errors.response && errors.response.status === 422) {
-          setErrors(errors.response.data.errors);
-        }
+    const formData = new FormData();
+    
+    // Append all fields to formData
+    formData.append('name', input.name);
+    formData.append('slug', input.slug);
+    formData.append('serial', input.serial);
+    formData.append('status', input.status);
+    formData.append('description', input.description);
+    
+    // Handle photo upload if exists
+    if (input.photo) {
+      // Convert base64 to blob
+      const byteString = atob(input.photo.split(',')[1]);
+      const mimeString = input.photo.split(',')[0].split(':')[1].split(';')[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([ab], {type: mimeString});
+      formData.append('photo', blob, 'category-photo.jpg');
+    }
+
+    const token = localStorage.token;
+    if (!token) {
+      setIsLoading(false);
+      console.error('No authentication token found');
+      return;
+    }
+
+    axios.post(`${Constants.BASE_URL}/category`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token || ''}`,
+        'Accept': 'application/json'
+      }
+    }).then(res => {
+      setIsLoading(false);
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Category created successfully',
+        showConfirmButton: false,
+        timer: 2000
       });
+      // Reset form after success
+      setInput({
+        name: "",
+        slug: "",
+        serial: "",
+        status: 1,
+        description: "",
+        photo: null,
+      });
+      setErrors([]);
+    }).catch(errors => {
+      setIsLoading(false);
+      let errorMessage = 'An error occurred';
+      
+      if(errors.response?.status === 422){
+        setErrors(errors.response.data.errors);
+        errorMessage = 'Validation errors occurred';
+      } else if (errors.response?.status === 500) {
+        console.error('Server Error:', errors.response.data);
+        if (errors.response.data.message?.includes('GD Library')) {
+          setErrors({photo: ['Image processing not available on server. Uploading original image.']});
+          errorMessage = 'Image uploaded without processing';
+        } else {
+          setErrors({server: ['Server error occurred. Please try again.']});
+          errorMessage = 'Server error occurred';
+        }
+      } else if (errors.response?.status === 401) {
+        console.error('Authentication Error:', errors.response.data);
+        setErrors({auth: ['Session expired. Please login again.']});
+        errorMessage = 'Session expired';
+      } else {
+        console.error('Network Error:', errors);
+        setErrors({network: ['Network error occurred. Please check your connection.']});
+        errorMessage = 'Network error occurred';
+      }
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: errorMessage,
+        confirmButtonText: 'OK'
+      });
+    });
   };
 
   return (
@@ -66,8 +140,8 @@ const AddCategory = () => {
             <div className="card-header">
               <div className="d-flex justify-content-between align-items-center">
                 <h4>Add Category</h4>
-                <button className={`btn ${style["custom-hover"]}`}>
-                  <Link to={""}>
+                <button className={`btn ${style.customHover}`}>
+                  <Link to={""} style={{textDecoration:"none",color:"brown"}}>
                     <i className="fa-solid fa-list"></i>List
                   </Link>
                 </button>

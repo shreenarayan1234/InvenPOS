@@ -1,9 +1,15 @@
-.custom-hover:hover {
-    background-color: #6da8e8; /* Darker shade of blue */
-    color: #fff; /* White text */
-    border-color: #004085; /* Darker border */
-    transition: all 0.3s ease-in-out; /* Smooth transition */
-  }
+/* In your CSS Module file (e.g., style.module.css) */
+.customHover {
+  transition: all 0.3s ease-in-out;
+  color:#fff;
+}
+
+.customHover:hover {
+  background-color: #6da8e8 !important;
+  color: #fff !important;
+  border-color: #004085 !important;
+}
+
 
   .login_error_msg{
     position: absolute;
